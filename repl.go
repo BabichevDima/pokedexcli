@@ -6,11 +6,15 @@ import (
 	"os"
 	"strings"
 )
+type configURL struct{
+    Next		string
+    Previous	string
+}
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*configURL) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -25,16 +29,20 @@ func getCommands() map[string]cliCommand {
 			description: "Displays a help message",
 			callback:    commandHelp,
 		},
-		// "map": {
-		// 	name:        "map",
-		// 	description: "Displays the names of 20 location areas in the Pokemon world",
-		// 	callback:    commandMap,
-		// },
+		"map": {
+			name:        "map",
+			description: "Displays the names of 20 location areas in the Pokemon world",
+			callback:    commandMap,
+		},
 	}
 }
 
 func runREPL() {
 	scanner := bufio.NewScanner(os.Stdin)
+	urlParam := configURL{
+		Next: "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",
+		Previous: "",
+	}
 
 	for {
 		fmt.Print("Pokedex > ")
@@ -49,7 +57,7 @@ func runREPL() {
 		command, exists := getCommands()[commandName]
 
 		if exists {
-			err := command.callback()
+			err := command.callback(&urlParam)
 			if err != nil {
 				fmt.Println(err)
 			}
