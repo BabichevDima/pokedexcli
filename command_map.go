@@ -6,26 +6,10 @@ import (
 	"io"
 	"log"
 	"net/http"
-	// "github.com/BabichevDima/pokedexcli/internal/pokeapi"
+	"github.com/BabichevDima/pokedexcli/internal/pokeapi"
 )
 
 func commandMap(config *configURL) error{
-	// fmt.Printf("\nCurrent URL: %s\n\n", config.Next)
-
-	// locations, err := config.GetLocations(config.Next)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// fmt.Printf("Next url: %s\n", config.Next)
-	// fmt.Printf("Previous url: %s\n\n", config.Previous)
-
-	// for _, area := range locations {
-	// 	fmt.Println(area.Name)
-	// }
-
-	// return nil
-
 	fmt.Println()
 	fmt.Printf("Current URL: %s\n", config.Next)
 	res, err := http.Get(config.Next)
@@ -41,17 +25,7 @@ func commandMap(config *configURL) error{
 		log.Fatal(err)
 	}
 
-	type LocationArea struct {
-		Name string `json:"name"`
-	}
-	type APIResponse struct {
-		Count    int            `json:"count"`
-		Next     *string        `json:"next"`
-		Previous *string        `json:"previous"`
-		Results  []LocationArea `json:"results"`
-	}
-
-	var apiResponse APIResponse
+	var apiResponse pokeapi.RespShallowLocations
 	err = json.Unmarshal(body, &apiResponse)
 	if err != nil {
 		fmt.Println(err)

@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"github.com/BabichevDima/pokedexcli/internal/pokeapi"
 )
 
 func commandMapB(config *configURL) error{
@@ -24,17 +25,7 @@ func commandMapB(config *configURL) error{
 		log.Fatal(err)
 	}
 
-	type LocationArea struct {
-		Name string `json:"name"`
-	}
-	type APIResponse struct {
-		Count    int            `json:"count"`
-		Next     *string        `json:"next"`
-		Previous *string        `json:"previous"`
-		Results  []LocationArea `json:"results"`
-	}
-
-	var apiResponse APIResponse
+	var apiResponse pokeapi.RespShallowLocations
 	err = json.Unmarshal(body, &apiResponse)
 	if err != nil {
 		fmt.Println(err)
