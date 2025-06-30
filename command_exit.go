@@ -7,7 +7,7 @@ import (
 
 var osExit = os.Exit
 
-func commandExit(c *configURL) error{
+func commandExit(c *config) error{
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	osExit(0)
 	return nil

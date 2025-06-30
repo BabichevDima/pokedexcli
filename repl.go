@@ -5,16 +5,18 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"github.com/BabichevDima/pokedexcli/internal/pokeapi"
 )
-type configURL struct{
-    Next		string
-    Previous	string
+type config struct {
+	pokeapiClient    pokeapi.Client
+	nextLocationsURL *string
+	prevLocationsURL *string
 }
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*configURL) error
+	callback    func(*config) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -42,12 +44,8 @@ func getCommands() map[string]cliCommand {
 	}
 }
 
-func runREPL() {
+func runREPL(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
-	urlParam := configURL{
-		Next: "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",
-		Previous: "",
-	}
 
 	for {
 		fmt.Print("Pokedex > ")
@@ -62,7 +60,7 @@ func runREPL() {
 		command, exists := getCommands()[commandName]
 
 		if exists {
-			err := command.callback(&urlParam)
+			err := command.callback(cfg)
 			if err != nil {
 				fmt.Println(err)
 			}
