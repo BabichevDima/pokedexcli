@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-func commandMapB(cfg *config) error{
+func commandMapB(cfg *config, locationArea string) error{
 	if cfg.prevLocationsURL == nil {
 		return errors.New("you're on the first page")
 	}
