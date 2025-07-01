@@ -31,6 +31,7 @@ func commandCatch(cfg *config, pokemon string) error{
             cfg.caughtPokemon = make(map[string]pokeapi.Pokemon)
         }
         cfg.caughtPokemon[pokemon] = pokemonInfoResp
+        fmt.Println("You may now inspect it with the 'inspect' command.")  
     } else {
         fmt.Printf("%s escaped!\n", pokemon)
     }
