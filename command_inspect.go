@@ -5,9 +5,6 @@ import (
 )
 
 func commandInspect(cfg *config, pokemon string) error{
-	fmt.Println("------------------------------")
-    fmt.Printf("You cautch: %v pokemons\n", len(cfg.caughtPokemon))
-	fmt.Println("------------------------------")
 	pokemonData, ok := cfg.caughtPokemon[pokemon]
 	if !ok {
 		return fmt.Errorf("You haven't caught %s yet", pokemon)
