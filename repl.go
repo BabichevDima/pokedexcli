@@ -8,9 +8,10 @@ import (
 	"github.com/BabichevDima/pokedexcli/internal/pokeapi"
 )
 type config struct {
-	pokeapiClient    pokeapi.Client
-	nextLocationsURL *string
-	prevLocationsURL *string
+	pokeapiClient		pokeapi.Client
+	nextLocationsURL	*string
+	prevLocationsURL	*string
+	caughtPokemon		map[string]pokeapi.Pokemon
 }
 
 type cliCommand struct {
@@ -46,6 +47,11 @@ func getCommands() map[string]cliCommand {
 			description: "It takes the name of a location area as an argument. Parse the Pokemon's names from the response and display them to the user",
 			callback:    commandExplore,
 		},
+		"catch": {
+			name:        "catch",
+			description: "It takes the name of a Pokemon as an argument. Catch the Pokemon.",
+			callback:    commandCatch,
+		},
 	}
 }
 
@@ -62,19 +68,14 @@ func runREPL(cfg *config) {
 		}
 
 		commandName := words[0]
-		// locationArea := ""
-		// if commandName == "explore" && words[1] != ""{
-		// 	locationArea := words[1]
-		// }
 		command, exists := getCommands()[commandName]
 
 		if exists {
-			var locationArea string
-			if command.name == "explore" && words[1] != ""{
-				locationArea = words[1]
-				// fmt.Println("Exploring pastoria-city-area...")
+			args := ""
+			if len(words) > 1 {
+				args = words[1]
 			}
-			err := command.callback(cfg, locationArea)
+			err := command.callback(cfg, args)
 			if err != nil {
 				fmt.Println(err)
 			}

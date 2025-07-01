@@ -47,10 +47,10 @@ func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
 	return locationsResp, nil
 }
 
-func (c *Client) ListExplorePokemon(pageURL string) (RespPokemonEncounter, error) {
+func (c *Client) ListExplorePokemon(locationArea string) (RespPokemonEncounter, error) {
 	url := baseURL + "/location-area/"
-	if pageURL != "" {
-		url += pageURL
+	if locationArea != "" {
+		url += locationArea
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -76,4 +76,35 @@ func (c *Client) ListExplorePokemon(pageURL string) (RespPokemonEncounter, error
 	}
 
 	return pokemonEncounterResp, nil
+}
+
+func (c *Client) PokemonInfo(pokemon string) (Pokemon, error) {
+	url := baseURL + "/pokemon/"
+	if pokemon != "" {
+		url += pokemon
+	}
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return Pokemon{}, err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return Pokemon{}, err
+	}
+	defer resp.Body.Close()
+
+	dat, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return Pokemon{}, err
+	}
+
+	pokemonInfoResp := Pokemon{}
+	err = json.Unmarshal(dat, &pokemonInfoResp)
+	if err != nil {
+		return Pokemon{}, err
+	}
+
+	return pokemonInfoResp, nil
 }
